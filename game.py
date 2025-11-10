@@ -5,17 +5,29 @@
 import random
 import os # <-- ADD THIS IMPORT
 
-# --- Functions Added in Feature Branch Commit A (Step 12) ---
+# --- Robust Functions (Replacing score functions for Commit #6) ---
 def get_high_score(score_file="high_score.txt"):
+    """Reads the current high score, handling file errors."""
     try:
         with open(score_file, 'r') as f:
             return int(f.read().strip())
-    except Exception:
+    except FileNotFoundError:
         return 999 
+    except ValueError:
+        print("\n[Warning: High score file corrupted. Resetting.]")
+        return 999 
+    except Exception as e:
+        print(f"\n[Warning: An unexpected file error occurred: {e}]")
+        return 999
 
 def save_high_score(new_score, score_file="high_score.txt"):
-    with open(score_file, 'w') as f:
-        f.write(str(new_score))
+    """Saves a new best score."""
+    try:
+        with open(score_file, 'w') as f:
+            f.write(str(new_score))
+    except IOError:
+        print("\n[Error: Could not save high score due to file write failure.]")
+# --------------------------------------------------
 
 class GuessingGame:
     """Core logic for the Guess the Number game, using class encapsulation (Commit #3)."""

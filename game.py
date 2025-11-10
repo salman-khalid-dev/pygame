@@ -28,13 +28,18 @@ def save_high_score(new_score, score_file="high_score.txt"):
 
 class GuessingGame:
     def __init__(self, low=1, high=100):
-        self.low = low; self.high = high; self.target = random.randint(self.low, high); self.guesses = 0
+        self.low = low
+        self.high = high
+        self.current_low = low
+        self.current_high = high
+        self.target = random.randint(self.low, self.high)
+        self.guesses = 0
         print(f"I'm thinking of a number between {self.low} and {self.high}. Type 'exit' to quit.")
     
     def play(self):
         while True:
             try:
-                user_input = input("Enter your guess: ").strip().lower()
+                user_input = input(f"Guess ({self.current_low}-{self.current_high}): ").strip().lower()
                 
                 if user_input == 'exit':
                     print("\nExiting game. Goodbye!")
@@ -46,10 +51,13 @@ class GuessingGame:
                 print("Invalid input. Please enter a whole number or 'exit'.")
                 continue
 
+            # Update bounds for the next guess (Narrowing the range hint)
             if guess < self.target:
                 print("Too low! Try again.")
+                self.current_low = max(self.current_low, guess + 1)
             elif guess > self.target:
                 print("Too high! Try again.")
+                self.current_high = min(self.current_high, guess - 1)
             else:
                 print(f"\nCongratulations! You guessed the number {self.target} in {self.guesses} guesses.")
                 return self.guesses 

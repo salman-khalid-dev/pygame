@@ -16,7 +16,7 @@ def get_high_score(score_file="high_score.txt"):
 def save_high_score(new_score, score_file="high_score.txt"):
     with open(score_file, 'w') as f:
         f.write(str(new_score))
-        
+
 class GuessingGame:
     """Core logic for the Guess the Number game, using class encapsulation (Commit #3)."""
     def __init__(self, low=1, high=100):
@@ -32,8 +32,19 @@ class GuessingGame:
 
 def main():
     print("--- Guess The Number Game ---")
+    
+    current_best = get_high_score()
+    if current_best != 999:
+        print(f"Current best score (fewest guesses): {current_best}")
+    
     game = GuessingGame()
-    game.play()
+    score = game.play()
+
+    if score < current_best:
+        print("NEW BEST SCORE! Saving your score.")
+        save_high_score(score)
+    elif current_best != 999:
+        print(f"The best score remains: {current_best}")
 
 if __name__ == "__main__":
     main()
